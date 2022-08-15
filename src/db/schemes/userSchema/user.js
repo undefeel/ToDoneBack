@@ -1,8 +1,17 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+const { Schema } = mongoose;
+const { model } = mongoose;
 
 const user = new Schema({
-  login: String,
+  userName: String,
+  login: {
+    type: String,
+    unique: true
+  },
   password: String,
-});
+  refresh_token: String
+}, { versionKey: false });
 
-module.exports = usersch = model('users', user);
+const userModel = model('user', user);
+
+export { userModel as user };
