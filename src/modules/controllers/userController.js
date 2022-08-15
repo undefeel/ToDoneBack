@@ -12,8 +12,8 @@ const register = async (req, res) => {
     const hashPass = await bcrypt.hash(password, 10);
 
     const user = await models.user.create({
-      userName: userName,
-      login: login,
+      userName,
+      login,
       password: hashPass
     });
     
@@ -40,7 +40,7 @@ const login = async (req, res) => {
 
     const user = await models.user.findOne({login: login});
 
-    if (user === null) res.status(400).send('login or password not match');
+    if (!user) res.status(400).send('login or password not match');
 
     const match = await bcrypt.compare(password, user.password)
 
@@ -52,9 +52,9 @@ const login = async (req, res) => {
       user.save();
 
       res.status(201).send({refreshToken: refreshToken, accessToken:accessToken});
-    } else {
-      res.status(400).send('login or password not match');
     }
+    
+    res.status(400).send('login or password not match');
   } catch (error) {
     res.status(500).send(error)
   }
